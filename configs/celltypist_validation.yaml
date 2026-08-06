@@ -1,0 +1,12 @@
+output_dir: outputs/celltypist_validation
+seeds: [13, 37, 73]
+model: Immune_All_Low.pkl
+n_targets_per_seed: 10
+target_policy: changed_by_majority_vote
+budgets: [0.01, 0.02]
+random_repeats: 1
+strategies: [random, same_majority_label, nearest]
+max_cells: 1200
+min_cells_per_label: 20
+resume: true
+use_gpu: false

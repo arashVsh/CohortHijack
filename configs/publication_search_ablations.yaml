@@ -1,0 +1,57 @@
+output_root: outputs/publication_search_ablations
+base:
+  experiment_name: publication_search_ablation
+  run_label: publication_search_ablation
+  seeds: [13, 37, 73]
+  datasets: [paul15]
+  classifiers: [logreg, linear_svm]
+  test_size: 0.35
+  min_class_cells: 30
+  max_cells_per_class: 500
+  n_hvg: 1500
+  n_pcs: 40
+  refinement:
+    k: 25
+    self_weight: 1.0
+    neighbor_weight: 1.0
+    confidence_weighted: true
+  audit:
+    n_targets_per_run: 50
+    target_manifest_root: outputs/iccke
+    target_policy: vulnerable
+    enabled: [multistart_greedy]
+    random_repeats: 0
+    budgets: []
+    candidate_pool_size: 120
+    greedy_group_size: 3
+    max_greedy_steps: 16
+    max_removed_fraction: 0.05
+    collateral_sample_size: 500
+    multistart_restarts: 8
+  runtime:
+    resume: true
+    n_jobs: -1
+    save_models: false
+variants:
+  - name: multistart_1
+    overrides:
+      audit:
+        multistart_restarts: 1
+  - name: multistart_4
+    overrides:
+      audit:
+        multistart_restarts: 4
+  - name: multistart_16
+    overrides:
+      audit:
+        multistart_restarts: 16
+  - name: group_size_1
+    overrides:
+      audit:
+        greedy_group_size: 1
+        max_greedy_steps: 48
+  - name: group_size_5
+    overrides:
+      audit:
+        greedy_group_size: 5
+        max_greedy_steps: 10

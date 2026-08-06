@@ -1,0 +1,28 @@
+experiment_name: iccke
+output_dir: outputs/iccke
+seeds: [13, 37, 73]
+datasets: [pbmc3k, paul15]
+classifiers: [logreg, linear_svm]
+test_size: 0.35
+min_class_cells: 30
+max_cells_per_class: 500
+n_hvg: 1500
+n_pcs: 40
+refinement:
+  k: 25
+  self_weight: 1.0
+  neighbor_weight: 1.0
+  confidence_weighted: true
+audit:
+  n_targets_per_run: 100
+  target_policy: vulnerable
+  random_repeats: 10
+  budgets: [0.005, 0.01, 0.02, 0.05, 0.10]
+  candidate_pool_size: 120
+  greedy_group_size: 3
+  max_greedy_steps: 15
+  collateral_sample_size: 500
+runtime:
+  resume: true
+  n_jobs: -1
+  save_models: true

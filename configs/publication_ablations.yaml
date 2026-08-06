@@ -1,0 +1,57 @@
+output_root: outputs/publication_ablations
+base:
+  experiment_name: publication_ablation
+  run_label: publication_ablation
+  seeds: [13, 37, 73]
+  datasets: [pbmc3k, paul15]
+  classifiers: [logreg, linear_svm]
+  test_size: 0.35
+  min_class_cells: 30
+  max_cells_per_class: 500
+  n_hvg: 1500
+  n_pcs: 40
+  refinement:
+    k: 25
+    self_weight: 1.0
+    neighbor_weight: 1.0
+    confidence_weighted: true
+  audit:
+    n_targets_per_run: 100
+    target_manifest_root: outputs/iccke
+    target_policy: vulnerable
+    enabled: [random, same_class, nearest]
+    random_repeats: 5
+    budgets: [0.01, 0.02, 0.05]
+    candidate_pool_size: 120
+    greedy_group_size: 3
+    max_greedy_steps: 15
+    collateral_sample_size: 500
+  runtime:
+    resume: true
+    n_jobs: -1
+    save_models: false
+variants:
+  - name: context_weight_0
+    overrides:
+      refinement:
+        neighbor_weight: 0.0
+  - name: context_weight_0p5
+    overrides:
+      refinement:
+        neighbor_weight: 0.5
+  - name: context_weight_2
+    overrides:
+      refinement:
+        neighbor_weight: 2.0
+  - name: refine_k10
+    overrides:
+      refinement:
+        k: 10
+  - name: refine_k50
+    overrides:
+      refinement:
+        k: 50
+  - name: uniform_neighbor_voting
+    overrides:
+      refinement:
+        confidence_weighted: false

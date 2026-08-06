@@ -1,0 +1,17 @@
+output_dir: outputs/celltypist_validation_v2
+seeds: [13, 37, 73]
+model: Immune_All_Low.pkl
+
+# Two target strata prevent evaluation from being restricted to cells that
+# CellTypist majority voting already changed in the clean cohort.
+targets_changed_per_seed: 10
+targets_stable_per_seed: 10
+
+budgets: [0.01, 0.02]
+random_repeats: 5
+strategies: [random, same_majority_label, nearest]
+
+max_cells: 1200
+max_neighbor_candidates: 250
+resume: true
+use_gpu: false

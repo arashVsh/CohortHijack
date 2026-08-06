@@ -1,0 +1,68 @@
+# Python environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local datasets
+data/
+*.h5ad
+*.h5
+*.loom
+*.mtx
+*.gz
+*.zip
+
+# Experiment outputs
+outputs/
+results/
+logs/
+checkpoints/
+artifacts/
+
+# Generated model files
+*.pkl
+*.joblib
+*.pt
+*.pth
+*.ckpt
+
+# Generated analysis files
+*.csv
+*.tsv
+*.parquet
+*.npy
+*.npz
+
+# Generated figures
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.svg
+
+# Coverage and build files
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+~*
