@@ -238,6 +238,7 @@ def main() -> None:
     models.download_models(model=[cfg["model"]])
 
     all_frames: list[pd.DataFrame] = []
+    clean_cohort_rows: list[dict[str, Any]] = []
     run_start = time.time()
 
     for seed_value in cfg["seeds"]:
@@ -253,6 +254,24 @@ def main() -> None:
         )
         neighbor_order = pca_neighbor_order(
             adata, seed, int(cfg.get("max_neighbor_candidates", 250))
+        )
+        changed_mask = clean["base"] != clean["majority"]
+        reference = adata.obs["reference_label"].astype(str).to_numpy()
+        clean_cohort_rows.append(
+            {
+                "seed": seed,
+                "n_cells": int(adata.n_obs),
+                "changed_by_majority_vote_count": int(changed_mask.sum()),
+                "stable_under_majority_vote_count": int((~changed_mask).sum()),
+                "changed_by_majority_vote_prevalence": float(changed_mask.mean()),
+                "stable_under_majority_vote_prevalence": float((~changed_mask).mean()),
+                "base_reference_accuracy": float((clean["base"] == reference).mean()),
+                "majority_reference_accuracy": float(
+                    (clean["majority"] == reference).mean()
+                ),
+                "base_majority_disagreement_rate": float(changed_mask.mean()),
+                "mean_independent_confidence": float(clean["confidence"].mean()),
+            }
         )
 
         manifest_path = seed_dir / "target_manifest.csv"
@@ -286,6 +305,13 @@ def main() -> None:
                 ),
                 "stable_targets": int(
                     (manifest["target_stratum"] == "stable_under_majority_vote").sum()
+                ),
+                "changed_by_majority_vote_count": int(changed_mask.sum()),
+                "stable_under_majority_vote_count": int((~changed_mask).sum()),
+                "base_majority_disagreement_rate": float(changed_mask.mean()),
+                "base_reference_accuracy": float((clean["base"] == reference).mean()),
+                "majority_reference_accuracy": float(
+                    (clean["majority"] == reference).mean()
                 ),
             },
             seed_dir / "clean_summary.json",
@@ -450,6 +476,7 @@ def main() -> None:
             write_combined_outputs(out, all_frames)
 
     write_combined_outputs(out, all_frames)
+    atomic_write_csv(pd.DataFrame(clean_cohort_rows), out / "clean_cohort_summary.csv")
     combined = (
         pd.concat(all_frames, ignore_index=True) if all_frames else pd.DataFrame()
     )

@@ -5,6 +5,7 @@ env/
 
 # Python cache
 __pycache__/
+tmp/
 *.py[cod]
 *$py.class
 .pytest_cache/

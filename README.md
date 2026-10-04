@@ -20,7 +20,7 @@ The released implementation supports the experiments reported in the paper:
 - CellTypist majority voting validation
 - crash safe target level checkpointing and deterministic resume
 
-In the completed experiments, structured removals were stronger than random removal on Paul15. Multi-start search changed 24.33% of linear SVM targets and 19.67% of logistic regression targets, with median removal fractions of 0.64% and 1.27%. Mean collateral changes remained below 0.4% in the controlled pipeline. When neighborhood refinement was disabled, no target flips occurred. CellTypist independent predictions remained unchanged across all validation runs, while majority voted labels sometimes changed after small cohort removals.
+In the completed targeted audit, structured removals were stronger than random removal on Paul15. Under the Search V2 configuration, multi-start search changed 24.33% of 300 selected lower-confidence linear-SVM targets (95% target-bootstrap CI 19.67%-29.33%) and 19.67% of 300 selected lower-confidence logistic-regression targets (95% CI 15.33%-24.33%). These are search-optimized vulnerability rates within the selected audit set, not population failure rates for routine annotation. Median successful removal fractions were 0.64% and 1.27%, and mean collateral changes among successful searches remained below 0.4% in the controlled pipeline. When neighborhood refinement was disabled, no target flips occurred. CellTypist independent predictions remained unchanged across all validation runs, while majority-voted labels sometimes changed after small cohort removals.
 
 ## Figures
 
@@ -206,6 +206,23 @@ python scripts/analyze_publication_results.py \
 ```
 
 The exact available tables depend on which experiments have been completed. Generated files may include target level summaries, aggregate flip rates, confidence intervals, class level vulnerability, and correlation analyses.
+
+Generate the reviewer-requested target-level confidence intervals, matched tests,
+standardized effect sizes, Benjamini-Hochberg corrections, and post-stratified
+CellTypist estimates with:
+
+```bash
+python scripts/reviewer_statistics.py \
+  --main outputs/iccke/per_target_results.csv \
+  --search outputs/search_v2/per_target_results.csv \
+  --celltypist outputs/celltypist_validation_v2/per_target_results.csv \
+  --celltypist-clean outputs/celltypist_validation_v2/clean_cohort_summary.csv \
+  --output-dir outputs/reviewer_statistics
+```
+
+Repeated random removals are averaged within each target before inference. The
+target cell, identified by seed and target index within a dataset/classifier run,
+is the bootstrap and pairing unit.
 
 ## Key output files
 
